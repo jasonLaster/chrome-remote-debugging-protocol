@@ -1,3 +1,9 @@
+### Chrome Remote Debugging Protocol
+
+A simple client for connecting to chrome and speaking the chrome remote debug protocol
+
+It borrows chrome's internal DevTools connection classes, which make it easy to use Domain methods and subscribe to events.
+
 #### WebSocketConnection
 
 The WebSocketConnection class is responsible for creating a connection
