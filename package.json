@@ -9,6 +9,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "url": "git://github.com/jasonlaster/chrome-remote-debugging-protocol.git",
+    "type": "git"
+  },
+  "bugs": {
+    "url": "https://github.com/jasonlaster/chrome-remote-debugging-protocol/issues"
+  },
   "files": [
     "bin",
     "src"
