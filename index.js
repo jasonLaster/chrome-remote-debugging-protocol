@@ -4,7 +4,8 @@ const {
 } = require("./src/api");
 
 const defer = require("./src/util/defer");
-const bootstrap = require("./src/bootstrap");
+const jsBootstrap = require("./src/js-bootstrap");
+const browserBootstrap = require("./src/browser-bootstrap");
 
 function onConnect(connection) {
   const ws = connection._socket;
@@ -13,7 +14,7 @@ function onConnect(connection) {
   ws.onmessage = (e) => connection._onMessage(e);
 }
 
-function connect(url) {
+function connect(url, { type = "browser"}) {
   let isConnected = false;
   let deferred = defer();
 
@@ -26,7 +27,12 @@ function connect(url) {
   }, 1000);
 
   return new Promise(resolve => {
-    bootstrap(InspectorBackend);
+    if (type == "browser") {
+      browserBootstrap(InspectorBackend);
+    } else {
+      jsBootstrap(InspectorBackend);
+    }
+
     WebSocketConnection.Create(
       url,
       connnection => {

@@ -3,7 +3,6 @@
 
 const fs = require("fs");
 const join = require("path").join;
-const protocol = require("./protocol.json");
 
 String.prototype.toTitleCase = function toTitleCase() {
   return this.substring(0, 1).toUpperCase() + this.substring(1);
@@ -108,17 +107,25 @@ function generateCommands(schema) {
     return result.join("\n");
 }
 
-// generate InspectorBackend commands / events
-// e.g. InspectorBackend.registerCommand("Inspector.enable", [], [], false);
-const code = generateCommands(protocol);
+function buildBootstrap(protocol, filePath) {
+  // generate InspectorBackend commands / events
+  // e.g. InspectorBackend.registerCommand("Inspector.enable", [], [], false);
+  const code = generateCommands(protocol);
 
-// wrap the commands in a function that receives InspectorBackend
-const bootstrapFunction = new Function("InspectorBackend", code);
+  // wrap the commands in a function that receives InspectorBackend
+  const bootstrapFunction = new Function("InspectorBackend", code);
 
-// export a module with that function
-const moduleText = `/* eslint-disable */\nmodule.exports = ${bootstrapFunction}`
+  // export a module with that function
+  const moduleText = `/* eslint-disable */\nmodule.exports = ${bootstrapFunction}`
 
-fs.writeFile(
-  join(__dirname,'bootstrap.js'),
-  moduleText
-);
+  fs.writeFile(
+    join(__dirname, filePath),
+    moduleText
+  );
+}
+
+const jsProtocol = require("../js-protocol.json");
+const browserProtocol = require("../browser-protocol.json");
+
+buildBootstrap(jsProtocol, "../src/js-bootstrap.js")
+buildBootstrap(browserProtocol, "../src/browser-bootstrap.js")
